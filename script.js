@@ -85,4 +85,4 @@ function game() {
     playerPoints == 3 ? result = "win" : result = "lose";
     return `You ${result} best of 5! ${playerPoints} to ${computerPoints}!`;
 }
-game();
+console.log("game(); to start the game!");
