@@ -3,11 +3,12 @@ const options = ["rock", "paper", "scissors"];
 function playerMove() { // "Rock", "Paper" or "Scissors", case insensitive, not error proof
     let playerInput;
 
-    do
+    do {
         playerInput = prompt("Choose Rock, Paper or Scissors to play!");
-    while(!validInput(playerInput))
+        playerInput === null ? playerInput = "err" : playerInput = playerInput.toLowerCase();
+    } while(!validInput(playerInput))
 
-    return playerInput.toLowerCase();
+    return playerInput;
 }
 
 function validInput(move) {
@@ -76,8 +77,6 @@ function game() {
                 break;
             case 'tie':
                 outcome = outcome.concat(` Both players choose ${currentPlayerSelection}!`);
-                break;
-            default:
                 break;
         }
         alert(`${outcome}\n\nPlayer has ${playerPoints} points!\nComputer has ${computerPoints} points!`);
