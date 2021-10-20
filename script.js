@@ -1,14 +1,13 @@
 const options = ["rock", "paper", "scissors"];
-const result = ["win", "lose", "tie"];
 
 function playerMove() { // "Rock", "Paper" or "Scissors", case insensitive, not error proof
-    let playerInput
+    let playerInput;
 
     do
-        playerInput = prompt("Choose Rock, Paper or Scissors to play!").toLowerCase();
+        playerInput = prompt("Choose Rock, Paper or Scissors to play!");
     while(!validInput(playerInput))
 
-    return playerInput;
+    return playerInput.toLowerCase();
 }
 
 function validInput(move) {
@@ -19,57 +18,72 @@ function validInput(move) {
 }
 
 function computerMove() { // computer's random choice
-    let compMove = Math.random(); //Math.floor
+    let compMove = Math.floor(Math.random()*3); //Math.floor
 
-    if(compMove <= 0.33)
-        return options[0];
-    else if(compMove > 0.33 && compMove < 0.66)
-        return options[1];
-    else if(compMove >= 0.66)
-        return options[2];
+    return options[compMove];
 } 
 
 function round(playerSelection, computerSelection) { // decides winner of the round
-    let outcome;
-
     if(playerSelection == computerSelection)
-        outcome = "It's a " + result[2] + "! Both players chose " + playerSelection + "!";
-    else if(playerSelection == options[0] && computerSelection == options[1])
-        outcome = "You " + result[1] + "! Paper covers Rock";
-    else if(playerSelection == options[0] && computerSelection == options[2])
-        outcome = "You " + result[0] + "! Rock crushes Scissors!";
-    else if(playerSelection == options[1] && computerSelection == options[0])
-        outcome = "You " + result[0] + "! Paper covers Rock";
-    else if(playerSelection == options[1] && computerSelection == options[2])
-        outcome = "You " + result[1] + "! Scissors cuts Paper!";
-    else if(playerSelection == options[2] && computerSelection == options[0])
-        outcome = "You " + result[1] + "! Rock crushes Scissors!";
-    else if(playerSelection == options[2] && computerSelection == options[1])
-        outcome = "You " + result[0] + "! Scissors cuts Paper!";
+        return 2;
 
-    return outcome;
-} // this function deserves better, but not today...
+    switch(playerSelection){
+        case 'rock':
+            return computerSelection == 'scissors' ? 0 : 1;
+        case 'paper':
+            return computerSelection == 'rock' ? 0 : 1;
+        case 'scissors':
+            return computerSelection == 'paper' ? 0 : 1;
+    }
+} 
 
 function game() {
     let playerPoints = 0;
     let computerPoints = 0;
+    let winMove;
+    let outcome;
 
     while(playerPoints < 3 && computerPoints < 3) {
-        let outcome = round(playerMove(), computerMove());
+        let currentPlayerSelection = playerMove();
+        let currentCompSelection = computerMove();
 
-        if(outcome.includes(result[0])) {
-            playerPoints++;
-        }else if(outcome.includes(result[1])){
-            computerPoints++;
+        switch(round(currentPlayerSelection, currentCompSelection)) { // gets winner
+            case 0:
+                outcome = "You win!";
+                winMove = currentPlayerSelection;
+                playerPoints++;
+                break;
+            case 1:
+                outcome = "You lose!";
+                winMove = currentCompSelection;
+                computerPoints++;
+                break;
+            case 2:
+                outcome = "It's a tie!";
+                winMove = "tie";
+                break;
         }
 
-        alert(outcome + "\n\nPlayer has " + playerPoints + " points!\nComputer has " + computerPoints + " points!");
+        switch(winMove) { //gets winning move
+            case 'rock':
+                outcome = outcome.concat(' Rock crushes Scissors!');
+                break;
+            case 'paper':
+                outcome = outcome.concat(' Paper covers Rock!');
+                break;
+            case 'scissors':
+                outcome = outcome.concat(' Scissors cuts Paper!');
+                break;
+            case 'tie':
+                outcome = outcome.concat(` Both players choose ${currentPlayerSelection}!`);
+                break;
+            default:
+                break;
+        }
+        alert(`${outcome}\n\nPlayer has ${playerPoints} points!\nComputer has ${computerPoints} points!`);
     }
 
-    if(playerPoints == 3)
-        return "You win best of 5! " + playerPoints + " to " + computerPoints + "!";
-    else
-        return "You lose best of 5! " + playerPoints + " to " + computerPoints + "!";
+    playerPoints == 3 ? result = "win" : result = "lose";
+    return `You ${result} best of 5! ${playerPoints} to ${computerPoints}!`;
 }
-
 game();
